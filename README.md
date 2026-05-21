@@ -125,3 +125,4 @@ HKEX real-time feed publishes at ~500ms; 50ms simulates a direct market data fee
 - Row-level flash via CSS keyframes (no JS timers in the render path)  
 - `useRef` for previous price tracking (avoids state re-renders)  
 - Capped order history at 200 rows with `.slice(-200)`  
+"# gset-sim" 
