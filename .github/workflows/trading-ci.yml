@@ -1,0 +1,36 @@
+name: GSET-SIM Quant Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  quant-test-gate:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js v20
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    # Optimization: Cache node_modules to minimize pipeline execution latency, a key benchmark for production readiness.
+    - name: Cache Node layers
+      uses: actions/cache@v4
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+
+    - name: Install dependencies
+      run: npm ci
+
+    # Execute unit tests for low-latency market data and order matching algorithms.
+    - name: Run High-Frequency Logic Verification
+      run: npm test
