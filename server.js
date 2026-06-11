@@ -32,6 +32,9 @@ const state = Object.fromEntries( //This method creates an object from an array 
 );
 
 // ─── Price simulation (Geometric Brownian Motion step) ──────────────────────
+// This function updates the price of a single instrument using a small drift
+// plus a random shock based on the instrument's volatility. It then derives
+// the bid/ask values from the new mid price and returns a tick payload.
 function tickPrice(symbol) {
   const s = state[symbol];
   const drift = 0.000002;
@@ -57,6 +60,9 @@ function tickPrice(symbol) {
 }
 
 // ─── Order simulation ────────────────────────────────────────────────────────
+// The simulator builds a pseudo-random order event with a random symbol, side,
+// order type, quantity, and venue. It also generates a fill price, status, and
+// latency to mimic realistic order flow for the order blotter stream.
 const ORDER_SIDES = ['BUY', 'SELL'];
 const ORDER_TYPES = ['MKT', 'LMT', 'IOC', 'FOK'];
 const VENUES     = ['HKEX', 'DARK', 'ATS1', 'BATS'];
@@ -188,3 +194,6 @@ server.listen(PORT, () => {
   console.log(`   WS   /ws            → WebSocket firehose`);
   console.log(`   GET  /snapshot      → current prices\n`);
 });
+
+// 在 server.js 最下方加上這行，方便 Jest 測試
+export { tickPrice, generateOrder, INSTRUMENTS, state };
