@@ -7,6 +7,7 @@ export default function PriceChart({ ticks, symbol }) {
   const [history, setHistory] = useState({});
   const prevSymbol = useRef(symbol);
 
+  // One ticks update, append new price point to history (useEffect dependency on ticks and symbol)
   useEffect(() => {
     const tick = ticks[symbol];
     if (!tick) return;
