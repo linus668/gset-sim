@@ -4,6 +4,44 @@ A low-latency trading desktop built with **React + Vite + Tailwind CSS**, backed
 
 ---
 
+## Business Analysis & System Workflow Overview (BA Perspective)
+
+While this project showcases high-performance technical execution, it was fully engineered through a structured **Business Analyst lens**—translating institutional electronic trading operations, HKEX market rules, and order lifecycles into strict functional specifications.
+
+### 1. Core Workflow & Order Lifecycle Mapping
+The simulator maps out complex transaction workflows and state transitions based on industry-standard execution logic. Below is the functional state machine defined for order execution:
+
+```
+┌────────────────────────────────────────────────────────┐
+│                      New Order                         │
+└──────────────────────────┬─────────────────────────────┘
+                           │
+                 ┌─────────▼─────────┐
+                 │  Order Validation │
+                 └─────────┬─────────┘
+                           │
+         ┌─────────────────┼─────────────────┐
+         │ (Pass)          │ (Fail)          │ (Partial Match)
+ ┌───────▼───────┐ ┌───────▼───────┐ ┌───────▼───────┐
+ │    FILLED     │ │   REJECTED    │ │    PARTIAL    │
+ │    (80%)      │ │     (8%)      │ │    (12%)      │
+ └───────────────┘ └───────────────┘ └───────▼───────┘
+                                             │
+                                     ┌───────▼───────┐
+                                     │   REMAINDER   │
+                                     │   CANCELED    │
+                                     └───────────────┘
+```
+
+### 2. Functional Specification & Requirement Elicitation (FSD)
+*   **Business Rules Realization:** Translated HKEX board lot and tick size rules into mathematical code blocks, engineering a simulated Geometric Brownian Motion price engine with tailored volatility (ranging from 1.2% to 3.0%) across 8 major instruments (e.g., 700.HK, 9988.HK).
+*   **Edge-Case Exception Handling:** Defined strict system boundaries for order exceptions, simulating market connectivity drops, execution slippage (±0.04 per side), and latency exceptions (80–2480μs) to test client-side interface resiliency.
+
+### 3. User Acceptance Testing (UAT) & Verification Strategy
+*   **Defect & Performance Governance:** Acted as the QA Lead to run comprehensive verification loops on UI rendering boundaries. Implemented low-latency frontend patterns to eliminate "jank" and rendering blocks, capping order logs at 200 rows to safeguard browser runtime stability under high-volume streaming data.
+*   **Data Validation:** Formulated test cases to verify data schema accuracy across multiple unified transport channels (SSE /stream endpoints vs. raw WebSocket firehose), ensuring raw payload parameters perfectly aligned with expected functional outputs.
+---
+
 ## Architecture
 
 ```
